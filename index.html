@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0077cc"/>
+  <link rel="manifest" href="manifest.json" />
+  <title>Calculator</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 16px;
+      background: #f1f3f4;
+      color: #222;
+    }
+    h2 {
+      font-size: 1rem;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #0077cc;
+    }
+    .section {
+      background: #fff;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
+    }
+    label {
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin: 10px 0 4px;
+      display: block;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      font-size: 1rem;
+      margin-bottom: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+      transition: border-color 0.2s;
+    }
+    input:focus {
+      border-color: #0077cc;
+      outline: none;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      font-size: 0.95rem;
+      font-weight: bold;
+      background-color: #0077cc;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    button:hover {
+      background-color: #005fa3;
+    }
+    .output {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #1b5e20;
+      margin-top: 10px;
+    }
+    .note {
+      font-size: 0.85rem;
+      color: #555;
+      font-weight: normal;
+    }
+    .row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .row input {
+      flex: 1;
+      min-width: 45%;
+    }
+    @media (max-width: 400px) {
+      h2 { font-size: 0.95rem; }
+      input, button { font-size: 0.9rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="section">
+    <h2>🧮 Average Calculator</h2>
+    <div class="row">
+      <input type="number" id="units1" placeholder="Units 1" oninput="calculateAvg()">
+      <input type="number" id="price1" placeholder="Price 1" oninput="calculateAvg()">
+    </div>
+    <div class="row">
+      <input type="number" id="units2" placeholder="Units 2" oninput="calculateAvg()">
+      <input type="number" id="price2" placeholder="Price 2" oninput="calculateAvg()">
+    </div>
+    <button onclick="clearAvg()">Clear</button>
+    <div id="avgOutput" class="output"></div>
+  </div>
+  <div class="section">
+    <h2>📈 % Change</h2>
+    <label for="ltp">Current LTP</label>
+    <input type="number" id="ltp" placeholder="e.g. 100" oninput="calculatePercent()">
+    <label for="target">Target Price</label>
+    <input type="number" id="target" placeholder="e.g. 110" oninput="calculatePercent()">
+    <button onclick="clearPercent()">Clear</button>
+    <div id="percentOutput" class="output"></div>
+  </div>
+  <div class="section">
+    <h2>✖ Multiply</h2>
+    <div class="row">
+      <input type="number" id="mul1" placeholder="Value 1" oninput="calculateMultiply()">
+      <input type="number" id="mul2" placeholder="Value 2" oninput="calculateMultiply()">
+    </div>
+    <div id="multiplyOutput" class="output"></div>
+  </div>
+  <div class="section">
+    <h2>➖ Subtract</h2>
+    <div class="row">
+      <input type="number" id="sub1" placeholder="Minuend" oninput="calculateSubtract()">
+      <input type="number" id="sub2" placeholder="Subtrahend" oninput="calculateSubtract()">
+    </div>
+    <div id="subtractOutput" class="output"></div>
+  </div>
+  <script>
+    function calculateAvg() {
+      const u1 = parseFloat(document.getElementById('units1').value) || 0;
+      const p1 = parseFloat(document.getElementById('price1').value) || 0;
+      const u2 = parseFloat(document.getElementById('units2').value) || 0;
+      const p2 = parseFloat(document.getElementById('price2').value) || 0;
+      const totalQty = u1 + u2;
+      const totalAmt = (u1 * p1) + (u2 * p2);
+      if (totalQty > 0) {
+        const avg = totalAmt / totalQty;
+        document.getElementById('avgOutput').innerHTML =
+          `Avg: ₹${avg.toFixed(2)}<br><span class="note">Qty: ${totalQty} | Invested: ₹${totalAmt.toFixed(2)}</span>`;
+      } else {
+        document.getElementById('avgOutput').innerHTML = '';
+      }
+    }
+    function clearAvg() {
+      ['units1', 'price1', 'units2', 'price2'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('avgOutput').innerHTML = '';
+    }
+    function calculatePercent() {
+      const ltp = parseFloat(document.getElementById('ltp').value);
+      const target = parseFloat(document.getElementById('target').value);
+      if (!isNaN(ltp) && !isNaN(target) && ltp !== 0) {
+        const change = ((target - ltp) / ltp) * 100;
+        const difference = target - ltp;
+        const direction = change > 0 ? "increase" : "decrease";
+        document.getElementById('percentOutput').innerHTML =
+          `${Math.abs(change).toFixed(2)}% ${direction} (₹${ltp} → ₹${target})<br><span class="note">Difference: ₹${difference.toFixed(2)}</span>`;
+      } else {
+        document.getElementById('percentOutput').innerHTML = '';
+      }
+    }
+    function clearPercent() {
+      document.getElementById('ltp').value = '';
+      document.getElementById('target').value = '';
+      document.getElementById('percentOutput').innerHTML = '';
+    }
+    function calculateMultiply() {
+      const val1 = parseFloat(document.getElementById('mul1').value);
+      const val2 = parseFloat(document.getElementById('mul2').value);
+      if (!isNaN(val1) && !isNaN(val2)) {
+        const result = val1 * val2;
+        document.getElementById('multiplyOutput').innerHTML = `× Result: ${result.toFixed(2)}`;
+      } else {
+        document.getElementById('multiplyOutput').innerHTML = '';
+      }
+    }
+    function calculateSubtract() {
+      const val1 = parseFloat(document.getElementById('sub1').value);
+      const val2 = parseFloat(document.getElementById('sub2').value);
+      if (!isNaN(val1) && !isNaN(val2)) {
+        const result = val1 - val2;
+        document.getElementById('subtractOutput').innerHTML = `− Result: ${result.toFixed(2)}`;
+      } else {
+        document.getElementById('subtractOutput').innerHTML = '';
+      }
+    }
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js')
+        .then(reg => console.log('✅ Service Worker Registered'))
+        .catch(err => console.error('SW registration failed', err));
+    }
+  </script>
+</body>
+</html>
