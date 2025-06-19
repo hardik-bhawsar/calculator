@@ -1,9 +1,10 @@
 {
   "name": "Stock Calculator",
   "short_name": "Calculator",
-  "start_url": ".",
+  "start_url": "./",             // Ensures correct start
+  "scope": "./",                 // Lets all pages be covered
   "display": "standalone",
-  "background_color": "#f1f3f4",
+  "background_color": "#ffffff",
   "theme_color": "#0077cc",
   "icons": [
     {
@@ -14,7 +15,8 @@
     {
       "src": "icons/icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
