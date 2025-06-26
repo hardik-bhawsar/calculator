@@ -114,13 +114,20 @@
     <div id="percentOutput" class="output"></div>
   </div>
   <div class="section">
-    <h2>✖ Multiply</h2>
-    <div class="row">
-      <input type="number" id="mul1" placeholder="Value 1" oninput="calculateMultiply()">
-      <input type="number" id="mul2" placeholder="Value 2" oninput="calculateMultiply()">
-    </div>
-    <div id="multiplyOutput" class="output"></div>
+  <div style="display: flex; align-items: center; justify-content: space-between;">
+    <h2 style="margin: 0;">✖ Multiply / ÷ Divide</h2>
+    <label style="display: flex; align-items: center; gap: 6px; font-size: 0.85rem;">
+      <span>÷</span>
+      <input type="checkbox" id="toggleDivide" checked onchange="calculateMultiply()" style="width: 40px; height: 20px;">
+    </label>
   </div>
+  <div class="row">
+    <input type="number" id="mul1" placeholder="Value 1" oninput="calculateMultiply()">
+    <input type="number" id="mul2" placeholder="Value 2" oninput="calculateMultiply()">
+  </div>
+  <div id="multiplyOutput" class="output"></div>
+</div>
+
   <div class="section">
     <h2>➖ Subtract</h2>
     <div class="row">
@@ -168,15 +175,26 @@
       document.getElementById('percentOutput').innerHTML = '';
     }
     function calculateMultiply() {
-      const val1 = parseFloat(document.getElementById('mul1').value);
-      const val2 = parseFloat(document.getElementById('mul2').value);
-      if (!isNaN(val1) && !isNaN(val2)) {
-        const result = val1 * val2;
-        document.getElementById('multiplyOutput').innerHTML = `× Result: ${result.toFixed(2)}`;
-      } else {
-        document.getElementById('multiplyOutput').innerHTML = '';
+  const val1 = parseFloat(document.getElementById('mul1').value);
+  const val2 = parseFloat(document.getElementById('mul2').value);
+  const isDivide = document.getElementById('toggleDivide').checked;
+
+  if (!isNaN(val1) && !isNaN(val2)) {
+    if (isDivide) {
+      if (val2 === 0) {
+        document.getElementById('multiplyOutput').innerHTML = "❌ Cannot divide by zero";
+        return;
       }
+      const result = val1 / val2;
+      document.getElementById('multiplyOutput').innerHTML = `÷ Result: ${result.toFixed(2)}`;
+    } else {
+      const result = val1 * val2;
+      document.getElementById('multiplyOutput').innerHTML = `× Result: ${result.toFixed(2)}`;
     }
+  } else {
+    document.getElementById('multiplyOutput').innerHTML = '';
+  }
+}
     function calculateSubtract() {
       const val1 = parseFloat(document.getElementById('sub1').value);
       const val2 = parseFloat(document.getElementById('sub2').value);
